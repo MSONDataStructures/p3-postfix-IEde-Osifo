@@ -22,7 +22,13 @@ public class LinkedStack<T> implements StackInterface<T> {
         //   similar to a removeFirst method for a LinkedList
         //   (a special case of our remove method).
         //   If the list is empty you should throw an exception.
-        return null;
+        if (isEmpty()) {
+            return null;
+        }
+        T element = first.element;
+        first = first.next;
+        size--;
+        return element;
     }
 
     /**
@@ -34,7 +40,10 @@ public class LinkedStack<T> implements StackInterface<T> {
         //   similar to a getFirst method for a LinkedList
         //   (a special case of our get method).
         //   If the list is empty you should throw an exception.
-        return null;
+        if (isEmpty()) {
+            return null;
+        }
+        return first.element;
     }
 
     /**
@@ -45,6 +54,13 @@ public class LinkedStack<T> implements StackInterface<T> {
         // TODO: Implement the push method, which will be
         //   similar to the addFirst method for a LinkedList.
         //   If elem is null you should throw an exception.
+        if (elem == null) {
+            throw new NullPointerException("Cannot push null onto the stack");
+        }
+        Node<T> newNode = new Node<>(elem);
+        newNode.next = first;
+        first = newNode;
+        size++;
     }
 
     /**
