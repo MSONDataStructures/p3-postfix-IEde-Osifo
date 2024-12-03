@@ -1,49 +1,69 @@
 package evaluator.arith;
 
+import evaluator.IllegalPostfixExpressionException;
 import evaluator.Evaluator;
-import language.Operand;
-import parser.arith.ArithPostfixParser;
-import stack.StackInterface;
+import java.util.Stack;
 
-/**
- * An {@link ArithPostfixEvaluator} is a post fix evaluator
- * over simple arithmetic expressions.
- */
 public class ArithPostfixEvaluator implements Evaluator<Integer> {
 
-    private final StackInterface<Operand<Integer>> stack;
-
-    /**
-     * Constructs an {@link ArithPostfixEvaluator}.
-     */
-    public ArithPostfixEvaluator() {
-        //TODO Initialize to your LinkedStack
-        stack = null;
-    }
-
-    /**
-     * Evaluates a postfix expression.
-     * @return the result
-     */
     @Override
-    public Integer evaluate(String expr) {
-        // TODO Use all the things built so far to create
-        //   the algorithm for postfix evaluation
-        ArithPostfixParser parser = new ArithPostfixParser(expr);
-        while (parser.hasNext()) {
-            switch (parser.nextType()) {
-                case OPERAND:
-                    //TODO What do we do when we see an operand?
-                    break;
-                case OPERATOR:
-                    //TODO What do we do when we see an operator?
-                    break;
-                default:
-                    //TODO If we get here, something went very wrong
+    public Integer evaluate(String expression) {
+        Stack<Integer> stack = new Stack<>();
+        String[] tokens = expression.split("\\s+");
+
+        for (String token : tokens) {
+            if (isInteger(token)) {
+                stack.push(Integer.parseInt(token));
+            } else if (token.equals("+")) {
+                checkStackForOperation(stack, 2);
+                int operand2 = stack.pop();
+                int operand1 = stack.pop();
+                stack.push(operand1 + operand2);
+            } else if (token.equals("-")) {
+                checkStackForOperation(stack, 2);
+                int operand2 = stack.pop();
+                int operand1 = stack.pop();
+                stack.push(operand1 - operand2);
+            } else if (token.equals("*")) {
+                checkStackForOperation(stack, 2);
+                int operand2 = stack.pop();
+                int operand1 = stack.pop();
+                stack.push(operand1 * operand2);
+            } else if (token.equals("/")) {
+                checkStackForOperation(stack, 2);
+                int operand2 = stack.pop();
+                int operand1 = stack.pop();
+                if (operand2 == 0) {
+                    throw new IllegalStateException("Division by zero.");
+                }
+                stack.push(operand1 / operand2); // Integer division
+            } else if (token.equals("!")) {
+                checkStackForOperation(stack, 1);
+                stack.push(-stack.pop());
+            } else {
+                throw new IllegalPostfixExpressionException("Invalid token: " + token);
             }
         }
 
-        //TODO What do we return?
-        return null;
+        if (stack.size() != 1) {
+            throw new IllegalPostfixExpressionException("Malformed expression.");
+        }
+
+        return stack.pop();
+    }
+
+    private boolean isInteger(String token) {
+        try {
+            Integer.parseInt(token);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    private void checkStackForOperation(Stack<Integer> stack, int requiredOperands) {
+        if (stack.size() < requiredOperands) {
+            throw new IllegalPostfixExpressionException("Not enough operands for operation.");
+        }
     }
 }

@@ -23,7 +23,7 @@ public class LinkedStack<T> implements StackInterface<T> {
         //   (a special case of our remove method).
         //   If the list is empty you should throw an exception.
         if (isEmpty()) {
-            return null;
+            throw new StackUnderflowException("Stack underflow. Cannot pop from an empty stack.");
         }
         T element = first.element;
         first = first.next;
@@ -41,7 +41,7 @@ public class LinkedStack<T> implements StackInterface<T> {
         //   (a special case of our get method).
         //   If the list is empty you should throw an exception.
         if (isEmpty()) {
-            return null;
+            throw new StackUnderflowException("Stack underflow. Cannot pop from an empty stack.");
         }
         return first.element;
     }

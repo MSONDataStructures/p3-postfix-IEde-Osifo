@@ -17,6 +17,12 @@ public class SubOperator extends BinaryOperator<Integer> {
         // TODO: Follow the example from PlusOperator to override
         //   this method (from the version in BinaryOperator)
         //   for subtraction.
-        return null;
+        Operand<Integer> op0 = this.getOp0();
+        Operand<Integer> op1 = this.getOp1();
+        if (op0 == null || op1 == null) {
+            throw new IllegalStateException("Could not perform operation prior to operands being set.");
+        }
+        Integer result = op0.getValue() - op1.getValue();
+        return new Operand<>(result);
     }
 }

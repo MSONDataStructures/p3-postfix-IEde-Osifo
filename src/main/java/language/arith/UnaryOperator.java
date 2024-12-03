@@ -8,8 +8,7 @@ public abstract class UnaryOperator<T> implements Operator<T> {
     private Operand<T> op0;
 
     @Override
-    public int getNumberOfArguments() {
-        return 1; // this one is on the house
+    public int getNumberOfArguments() {return 1; // this one is on the house
     }
 
     @Override
@@ -18,6 +17,11 @@ public abstract class UnaryOperator<T> implements Operator<T> {
         //   implementation to implement this UnaryOperator
         //   abstract class (which will have NegateOperator
         //   as a subclass).
+        if (i == 0) {
+            this.op0 = operand; // set the first operand
+        } else {
+            throw new IllegalArgumentException("Unary operator only accepts one operand.");
+        }
     }
 
     /**
